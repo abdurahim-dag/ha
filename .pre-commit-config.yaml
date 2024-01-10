@@ -1,0 +1,71 @@
+exclude: "^docs/|/migrations/"
+default_stages: [commit]
+
+repos:
+  - repo: local
+    hooks:
+    -   id: flake8
+        name: flake8
+        description: wemake-python-styleguide enforcement
+        entry: flake8
+        args: ["--config=setup.cfg"]
+        language: python
+        types: [python]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-toml
+      - id: detect-private-key
+      - id: name-tests-test
+
+  -   repo: https://github.com/asottile/pyupgrade
+      rev: v3.11.0
+      hooks:
+      -   id: pyupgrade
+
+  - repo: https://github.com/psf/black
+    rev: 23.9.1
+    hooks:
+      - id: black
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.0.290
+    hooks:
+      - id: ruff
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: '1.7.5'
+    hooks:
+    - id: bandit
+
+repos:
+- repo: https://github.com/sqlfluff/sqlfluff
+  rev: 2.3.2
+  hooks:
+    - id: sqlfluff-lint
+      # For dbt projects, this installs the dbt "extras".
+      # You will need to select the relevant dbt adapter for your dialect
+      # (https://docs.getdbt.com/docs/available-adapters):
+      # additional_dependencies: ['<dbt-adapter>', 'sqlfluff-templater-dbt']
+    # - id: sqlfluff-fix
+      # Arbitrary arguments to show an example
+      # args: [--rules, "LT02,CP02"]
+      # additional_dependencies: ['<dbt-adapter>', 'sqlfluff-templater-dbt']
+
+# sets up .pre-commit-ci.yaml to ensure pre-commit dependencies stay up to date
+ci:
+  autoupdate_schedule: weekly
+  skip: []
+  submodules: false
