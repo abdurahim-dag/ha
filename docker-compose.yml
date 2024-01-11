@@ -2,7 +2,7 @@ version: '3'
 services:
 
   db:
-    container_name: db
+    container_name: db-socia
     build: db
     environment:
       POSTGRES_DB: socia
@@ -14,7 +14,7 @@ services:
       - "4432:5432"
 
   app:
-    container_name: app
+    container_name: app-socia
     build:
       context: app
       args:
