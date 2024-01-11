@@ -1,13 +1,17 @@
+from django.contrib.auth import views as auth_views
+from http import HTTPStatus
+from django.contrib.auth import authenticate, login
+
 from rest_framework import generics, permissions, status, viewsets, views
 from rest_framework.response import Response
 
 from ..models import UserProfile
-from ..serializers import UserSerializer
+from ..serializers import UserSignupSerializer
 
 
 class UserRegistrationView(generics.CreateAPIView):
     queryset = UserProfile.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserSignupSerializer
     permission_classes = [permissions.AllowAny]
 
     def create(self, request, *args, **kwargs):
@@ -23,12 +27,13 @@ class UserViewSet(
     viewsets.mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    serializer_class = UserSerializer
+    serializer_class = UserSignupSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
 
+        queryset = UserProfile.objects.all()
         return UserProfile.objects.filter(user=user)
 
 
@@ -40,17 +45,12 @@ class UserLoginView(views.APIView):
             "user": str(request.user),  # `django.contrib.auth.User` instance.
             "auth": str(request.auth),  # None
         }
-        return Response(content)
 
+        username = request.data["username"]
+        password = request.data["password"]
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return Response(content)
 
-# def my_view(request):
-#     username = request.POST["username"]
-#     password = request.POST["password"]
-#     user = authenticate(request, username=username, password=password)
-#     if user is not None:
-#         login(request, user)
-#         # Redirect to a success page.
-#         ...
-#     else:
-#         # Return an 'invalid login' error message.
-#         ...
+        return Response(content, status=HTTPStatus.UNAUTHORIZED)

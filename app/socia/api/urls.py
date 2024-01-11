@@ -2,16 +2,13 @@ from django.urls import path
 from socia.api import views
 
 urlpatterns = [
-    #   path('user/', views.MoviesListApi.as_view()),
-    #   #path('movies/<uuid:pk>/', views.MoviesDetailApi.as_view())
-    #   path('user/register', views.MoviesListApi.as_view()),
     path(
         "user/register/",
         views.UserRegistrationView.as_view(),
         name="user-registration",
     ),
     path(
-        "user/<int:id>/",
+        "user/<int:pk>/",
         views.UserViewSet.as_view({"get": "retrieve"}),
         name="user-profile",
     ),
