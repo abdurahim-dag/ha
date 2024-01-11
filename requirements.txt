@@ -1,6 +1,0 @@
-flake8
-# flake8 plugins
-mypy
-# mypy stub django
-black
-ruff
