@@ -1,0 +1,23 @@
+version: '3'
+services:
+
+  db:
+    container_name: db
+    build: db
+    environment:
+      POSTGRES_DB: socia
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+    expose:
+      - "5432"
+    ports:
+      - "4432:5432"
+
+  app:
+    container_name: app
+    build:
+      context: app
+      args:
+        appuser: app
+    depends_on:
+      - db
