@@ -21,7 +21,7 @@ ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
 WORKDIR /app
-EXPOSE 8000
+EXPOSE 8001
 
 RUN sed -i 's/\r$//g' /app/bin/run
 RUN chmod +x /app/bin/run

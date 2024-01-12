@@ -1,12 +1,12 @@
-from django.contrib.auth import views as auth_views
+"""Views."""
 from http import HTTPStatus
-from django.contrib.auth import authenticate, login
 
-from rest_framework import generics, permissions, status, viewsets, views
+from django.contrib.auth import authenticate, login
+from rest_framework import generics, permissions, status, views, viewsets
 from rest_framework.response import Response
 
-from ..models import CustomUser
-from ..serializers import UserSignupSerializer
+from socia.models import CustomUser
+from socia.serializers import UserSignupSerializer
 
 
 class UserRegistrationView(generics.CreateAPIView):
@@ -18,7 +18,7 @@ class UserRegistrationView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        return Response({"username": user.username}, status=status.HTTP_201_CREATED)
+        return Response({"sign up": "success"}, status=status.HTTP_201_CREATED)
 
 
 class UserViewSet(
@@ -27,29 +27,22 @@ class UserViewSet(
     viewsets.mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
+    queryset = CustomUser.objects.all()
     serializer_class = UserSignupSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-
-        return CustomUser.objects.filter(id=user.id)
 
 
 class UserLoginView(views.APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        content = {
-            "user": str(request.user),  # `django.contrib.auth.User` instance.
-            "auth": str(request.auth),  # None
-        }
-
         username = request.data["username"]
         password = request.data["password"]
+
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             login(request, user)
-            return Response(content)
+            return Response({"sign in": "success"})
 
-        return Response(content, status=HTTPStatus.UNAUTHORIZED)
+        return Response({"sign in": "exception"}, status=HTTPStatus.UNAUTHORIZED)
