@@ -31,8 +31,8 @@ docker compose --env-file .\env.example up -d --no-deps --build
 ```
 
 Для проверки, можно воспользоваться этой спецификацией:
-/login
-/user/register
-/user/get/{id}
+- /login
+- /user/register
+- /user/get/{id}
 
 Postman-коллекция, для проверки: `HA-Collection.postman_collection.json`.
