@@ -19,5 +19,12 @@ services:
       context: app
       args:
         appuser: app
+    environment:
+      DB_HOST: ${PG_HOST:-db-socia}
+      DB_PORT: ${PG_PORT:-5432}
     depends_on:
       - db
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"

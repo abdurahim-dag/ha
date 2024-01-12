@@ -5,12 +5,12 @@ from django.contrib.auth import authenticate, login
 from rest_framework import generics, permissions, status, viewsets, views
 from rest_framework.response import Response
 
-from ..models import UserProfile
+from ..models import CustomUser
 from ..serializers import UserSignupSerializer
 
 
 class UserRegistrationView(generics.CreateAPIView):
-    queryset = UserProfile.objects.all()
+    queryset = CustomUser.objects.all()
     serializer_class = UserSignupSerializer
     permission_classes = [permissions.AllowAny]
 
@@ -33,8 +33,7 @@ class UserViewSet(
     def get_queryset(self):
         user = self.request.user
 
-        queryset = UserProfile.objects.all()
-        return UserProfile.objects.filter(user=user)
+        return CustomUser.objects.filter(id=user.id)
 
 
 class UserLoginView(views.APIView):
